@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Untuk Njah 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --ink:#1a0a10;
+  --wine:#6B1A2E;
+  --rose:#C0546E;
+  --blush:#EDB8C4;
+  --petal:#F7E4E9;
+  --gold:#C9956B;
+  --cream:#FBF5F0;
+  --muted:#9A6070;
+}
+
+html,body{
+  height:100%;
+  background:var(--ink);
+  font-family:'DM Sans',sans-serif;
+  font-weight:300;
+  color:var(--cream);
+  overflow-x:hidden;
+}
+
+/* ══════════════════════════
+   CANVAS BACKGROUND
+══════════════════════════ */
+#canvas{
+  position:fixed;inset:0;z-index:0;
+  pointer-events:none;
+}
+
+/* ══════════════════════════
+   SCREEN 1 — INTRO
+══════════════════════════ */
+#screen-intro{
+  position:fixed;inset:0;z-index:50;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 80% 70% at 50% 55%,#2d0818 0%,#110408 100%);
+  transition:opacity 1.2s ease,transform 1.2s ease;
+}
+#screen-intro.out{opacity:0;transform:scale(1.08);pointer-events:none}
+
+.intro-eyebrow{
+  font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;
+  color:var(--gold);opacity:0;
+  animation:fadeUp .8s .3s forwards;
+}
+.intro-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(5rem,20vw,9rem);
+  font-style:italic;font-weight:300;
+  color:var(--cream);line-height:.9;
+  margin-top:.3rem;
+  opacity:0;animation:titleReveal 1.2s .6s cubic-bezier(.16,1,.3,1) forwards;
+  text-shadow:0 0 80px rgba(192,84,110,.35);
+}
+.intro-title em{
+  font-style:normal;font-weight:600;
+  background:linear-gradient(135deg,var(--blush),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.intro-line{
+  width:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:1.4rem auto;
+  animation:lineGrow 1s 1.2s forwards;
+}
+.intro-sub{
+  font-size:clamp(.85rem,2.5vw,1rem);
+  color:var(--muted);letter-spacing:.1em;
+  opacity:0;animation:fadeUp .8s 1.4s forwards;
+}
+.intro-cta{
+  margin-top:2.8rem;
+  padding:.9rem 3rem;border-radius:60px;border:none;
+  background:linear-gradient(135deg,var(--rose),var(--wine));
+  color:var(--cream);
+  font-family:'DM Sans',sans-serif;font-size:.95rem;letter-spacing:.1em;
+  cursor:pointer;
+  box-shadow:0 0 0 0 rgba(192,84,110,.6);
+  opacity:0;animation:fadeUp .8s 1.7s forwards,ctaPulse 2.5s 2.5s ease-in-out infinite;
+  transition:transform .25s,box-shadow .25s;
+  position:relative;overflow:hidden;
+}
+.intro-cta::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.intro-cta:hover{transform:translateY(-3px) scale(1.03);}
+.intro-cta:hover::before{opacity:1;}
+@keyframes ctaPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(192,84,110,.5),0 8px 30px rgba(107,26,46,.5);}
+  50%{box-shadow:0 0 0 14px rgba(192,84,110,0),0 8px 30px rgba(107,26,46,.5);}
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes titleReveal{
+  from{opacity:0;transform:translateY(40px) skewY(2deg);}
+  to{opacity:1;transform:translateY(0) skewY(0);}
+}
+@keyframes lineGrow{to{width:120px;}}
+
+/* ══════════════════════════
+   SCREEN 2 — MAIN
+══════════════════════════ */
+#screen-main{
+  position:relative;z-index:10;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;
+  padding:3rem 1rem 6rem;
+  opacity:0;pointer-events:none;
+  transition:opacity .8s ease;
+}
+#screen-main.visible{opacity:1;pointer-events:all;}
+
+/* floating name header */
+.page-header{
+  text-align:center;margin-bottom:2.5rem;
+  animation:fadeUp .8s .2s both;
+}
+.page-header .eyebrow{
+  font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--gold);display:block;margin-bottom:.6rem;
+}
+.page-header .her-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.8rem,10vw,5rem);
+  font-style:italic;font-weight:300;
+  background:linear-gradient(135deg,var(--blush) 30%,var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  line-height:1;
+  display:inline-block;
+  animation:floatBob 4s ease-in-out infinite;
+}
+@keyframes floatBob{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+
+/* ══════════════════════════
+   ENVELOPE 3D
+══════════════════════════ */
+.env-scene{
+  width:100%;max-width:480px;
+  perspective:1000px;
+  animation:fadeUp .9s .4s both;
+}
+.env-wrap{
+  position:relative;
+  transform-style:preserve-3d;
+}
+
+/* Envelope body */
+.env-body{
+  background:linear-gradient(160deg,#3d0d1e 0%,#2a0812 100%);
+  border-radius:4px 4px 16px 16px;
+  border:1px solid rgba(192,84,110,.25);
+  box-shadow:
+    0 0 0 1px rgba(201,149,107,.1),
+    0 20px 60px rgba(0,0,0,.6),
+    0 0 120px rgba(107,26,46,.2);
+  overflow:hidden;
+  position:relative;
+}
+
+/* diagonal stripe texture on envelope */
+.env-body::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    -45deg,
+    rgba(192,84,110,.04),rgba(192,84,110,.04) 10px,
+    transparent 10px,transparent 22px
+  );
+  pointer-events:none;
+}
+
+/* gold border lines */
+.env-body::after{
+  content:'';position:absolute;inset:6px;
+  border:1px solid rgba(201,149,107,.12);
+  border-radius:2px 2px 12px 12px;
+  pointer-events:none;
+}
+
+/* FLAP */
+.env-flap-wrap{
+  position:relative;height:100px;z-index:5;
+  transform-style:preserve-3d;
+  transform-origin:top center;
+  transition:transform .8s cubic-bezier(.4,0,.2,1);
+}
+.env-flap{
+  width:100%;height:100%;
+  background:linear-gradient(170deg,#4a1020 0%,#350b18 100%);
+  clip-path:polygon(0 0,50% 100%,100% 0);
+  position:relative;
+}
+.env-flap::after{
+  content:'';position:absolute;
+  left:50%;top:60%;
+  transform:translate(-50%,-50%);
+  width:30px;height:30px;
+  border-radius:50%;
+  background:radial-gradient(circle,var(--gold),#a0703a);
+  box-shadow:0 0 12px rgba(201,149,107,.6);
+  font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+}
+.seal-wax{
+  position:absolute;
+  left:50%;top:58%;
+  transform:translate(-50%,-50%);
+  z-index:6;pointer-events:none;
+  font-size:1.3rem;
+  filter:drop-shadow(0 2px 8px rgba(201,149,107,.8));
+  transition:opacity .4s;
+}
+
+.env-wrap.open .env-flap-wrap{
+  transform:rotateX(-175deg);
+}
+.env-wrap.open .seal-wax{opacity:0;}
+
+/* bottom envelope tabs (V shape shadow) */
+.env-bottom{
+  position:absolute;bottom:0;left:0;right:0;height:60px;
+  background:linear-gradient(0deg,rgba(0,0,0,.25) 0%,transparent 100%);
+  pointer-events:none;z-index:1;
+}
+
+/* ══════════════════════════
+   LETTER
+══════════════════════════ */
+.letter-wrap{
+  max-height:0;overflow:hidden;
+  transition:max-height 1s cubic-bezier(.4,0,.2,1) .5s;
+}
+.env-wrap.open .letter-wrap{max-height:1400px;}
+
+.letter{
+  background:var(--cream);
+  margin:0 12px 12px;
+  border-radius:0 0 12px 12px;
+  padding:0 2rem;
+  overflow:hidden;
+  max-height:0;
+  opacity:0;
+  transition:
+    max-height .9s cubic-bezier(.4,0,.2,1) .7s,
+    opacity .7s ease .9s,
+    padding .7s ease .7s;
+  padding-top:0;padding-bottom:0;
+  position:relative;
+  color:var(--ink);
+}
+.env-wrap.open .letter{
+  max-height:1400px;opacity:1;
+  padding-top:2.4rem;padding-bottom:3rem;
+}
+
+/* paper texture lines */
+.letter::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    transparent,transparent 29px,
+    rgba(192,84,110,.06) 29px,rgba(192,84,110,.06) 30px
+  );
+  top:3.6rem;pointer-events:none;
+}
+
+/* left red margin line */
+.letter::after{
+  content:'';position:absolute;
+  left:3.5rem;top:0;bottom:0;width:1px;
+  background:rgba(192,84,110,.15);
+  pointer-events:none;
+}
+
+.letter-inner{
+  position:relative;z-index:1;
+  animation:none;
+}
+.env-wrap.open .letter-inner .l-line{
+  animation:lineIn .5s both;
+}
+.env-wrap.open .letter-inner .l-line:nth-child(1){animation-delay:1s}
+.env-wrap.open .letter-inner .l-line:nth-child(2){animation-delay:1.1s}
+.env-wrap.open .letter-inner .l-line:nth-child(3){animation-delay:1.2s}
+.env-wrap.open .letter-inner .l-line:nth-child(4){animation-delay:1.3s}
+.env-wrap.open .letter-inner .l-line:nth-child(5){animation-delay:1.4s}
+.env-wrap.open .letter-inner .l-line:nth-child(6){animation-delay:1.5s}
+.env-wrap.open .letter-inner .l-line:nth-child(7){animation-delay:1.6s}
+@keyframes lineIn{
+  from{opacity:0;transform:translateX(-8px);}
+  to{opacity:1;transform:translateX(0);}
+}
+
+.l-date{
+  font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);text-align:right;margin-bottom:1.6rem;
+}
+.l-salute{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:1.35rem;font-weight:400;
+  color:var(--wine);margin-bottom:1.6rem;
+}
+.l-salute strong{color:var(--rose);font-weight:600;}
+
+.l-body{line-height:1.95;font-size:.97rem;color:#2e1018;}
+.l-body p{margin-bottom:1.1rem;}
+
+.l-pullquote{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:1.25rem;font-weight:300;
+  color:var(--wine);
+  text-align:center;
+  margin:2rem -2rem;
+  padding:1.6rem 2.4rem;
+  background:linear-gradient(135deg,rgba(107,26,46,.06),rgba(192,84,110,.06));
+  border-top:1px solid rgba(192,84,110,.15);
+  border-bottom:1px solid rgba(192,84,110,.15);
+  line-height:1.6;
+  position:relative;
+}
+.l-pullquote::before,.l-pullquote::after{
+  content:'"';
+  font-family:'Cormorant Garamond',serif;
+  font-size:4rem;line-height:0;
+  color:rgba(192,84,110,.18);
+  position:absolute;
+}
+.l-pullquote::before{top:1.8rem;left:.8rem;}
+.l-pullquote::after{content:'"';bottom:.4rem;right:.8rem;}
+.l-pullquote em{color:var(--rose);font-style:normal;font-weight:600;}
+
+.l-close{
+  margin-top:2rem;
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:1rem;color:var(--muted);
+}
+.l-sig{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem;font-style:italic;font-weight:300;
+  color:var(--wine);margin-top:.3rem;
+  display:block;
+}
+
+/* ══════════════════════════
+   OPEN BUTTON
+══════════════════════════ */
+.open-ring{
+  position:relative;
+  margin-top:-1px;
+  display:flex;flex-direction:column;align-items:center;
+  animation:fadeUp .9s .6s both;
+}
+.open-btn{
+  width:64px;height:64px;border-radius:50%;border:none;
+  background:linear-gradient(145deg,var(--rose),var(--wine));
+  color:var(--cream);font-size:1.6rem;
+  cursor:pointer;
+  box-shadow:0 4px 20px rgba(107,26,46,.5);
+  border:3px solid rgba(251,245,240,.9);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:6;
+  transition:transform .25s;
+  animation:btnPop 2.5s ease-in-out infinite;
+}
+@keyframes btnPop{
+  0%,100%{box-shadow:0 4px 20px rgba(107,26,46,.5),0 0 0 0 rgba(192,84,110,.6);}
+  50%{box-shadow:0 4px 20px rgba(107,26,46,.5),0 0 0 16px rgba(192,84,110,0);}
+}
+.open-btn:hover{transform:scale(1.12);}
+.open-btn.done{animation:none;box-shadow:0 4px 20px rgba(107,26,46,.4);}
+
+.open-label{
+  margin-top:.6rem;font-size:.72rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  animation:blinkLabel 2s ease-in-out infinite;
+}
+@keyframes blinkLabel{0%,100%{opacity:1;}50%{opacity:.3;}}
+.open-label.gone{display:none;}
+
+/* ══════════════════════════
+   FIREFLY / PETAL BURST
+══════════════════════════ */
+#burst-layer{
+  position:fixed;inset:0;z-index:80;pointer-events:none;
+}
+.burst-p{
+  position:absolute;pointer-events:none;opacity:0;
+  animation:burstFly var(--dur) var(--delay) ease-out forwards;
+}
+@keyframes burstFly{
+  0%  {opacity:1;transform:translate(0,0) scale(.4) rotate(0);}
+  100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(1.4) rotate(var(--r));}
+}
+
+/* ══════════════════════════
+   POSTSCRIPT SECTION
+══════════════════════════ */
+.ps-section{
+  width:100%;max-width:480px;
+  margin-top:2rem;
+  opacity:0;transform:translateY(20px);
+  transition:opacity .7s ease, transform .7s ease;
+  animation:none;
+}
+.ps-section.show{opacity:1;transform:translateY(0);}
+
+.ps-card{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(192,84,110,.15);
+  border-radius:16px;
+  padding:1.6rem 1.8rem;
+  display:flex;gap:1rem;align-items:flex-start;
+  backdrop-filter:blur(8px);
+}
+.ps-icon{font-size:1.6rem;flex-shrink:0;margin-top:.1rem;}
+.ps-text{font-size:.88rem;line-height:1.7;color:rgba(251,245,240,.65);}
+.ps-text strong{color:var(--blush);font-weight:400;}
+
+/* ══════════════════════════
+   KEYFRAMES misc
+══════════════════════════ */
+@keyframes shimmerText{
+  0%,100%{text-shadow:0 0 40px rgba(192,84,110,.2);}
+  50%{text-shadow:0 0 80px rgba(192,84,110,.5);}
+}
+
+@media(max-width:400px){
+  .letter{margin:0 8px 8px;padding-left:1.4rem;padding-right:1.4rem;}
+  .l-pullquote{margin:2rem -1.4rem;padding:1.4rem 1.8rem;}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<div id="burst-layer"></div>
+
+<!-- ══ INTRO ══ -->
+<div id="screen-intro">
+  <div class="intro-eyebrow">sebuah pesan kecil</div>
+  <div class="intro-title"><em>Njah</em></div>
+  <div class="intro-line"></div>
+  <div class="intro-sub">ada yang ingin aku bilang&nbsp;✦</div>
+  <button class="intro-cta" id="introCta">Buka Suratnya &nbsp;💌</button>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div id="screen-main">
+  <div class="page-header">
+    <span class="eyebrow">untuk yang selalu di hatiku</span>
+    <span class="her-name">Njah</span>
+  </div>
+
+  <!-- Envelope -->
+  <div class="env-scene">
+    <div class="env-wrap" id="envWrap">
+      <div class="env-body">
+        <div class="env-flap-wrap">
+          <div class="env-flap"></div>
+          <span class="seal-wax">✦</span>
+        </div>
+
+        <div class="letter-wrap">
+          <div class="letter" id="letter">
+            <div class="letter-inner">
+              <div class="l-line l-date" id="ldate"></div>
+
+              <div class="l-line l-salute">Untuk <strong>Njah</strong>  >_<</div>
+
+              <div class="l-line l-body">
+                <p>Ada hal-hal kecil tentang kamu yang nggak pernah aku ceritain, tapi selalu aku simpan. Cara kamu ketawa sampai nggak keluar suaranya. Cara kamu excited sama hal-hal yang orang lain anggap biasa. Cara kamu perhatian tanpa sadar kamu lagi perhatian.</p>
+                <p>Aku sering nggak pinter ngomong langsung — jadi biar tulisan ini yang ngomong apa yang sering aku pendam sendiri.</p>
+              </div>
+
+              <div class="l-line l-pullquote">
+                Makasih udah jadi <em>yang terbaik njah</em>.<br/>
+                Kamu cukup. Lebih dari cukup.
+              </div>
+
+              <div class="l-line l-body">
+                <p>Tiap hari sama kamu itu rasanya kayak dapat hadiah yang nggak diminta. Dan aku harap kamu tahu — sekecil apapun usahamu, aku lihat. Aku selalu lihat kamu.</p>
+                <p>Semoga hari-hari ke depan kita makin banyak momentnya, makin banyak ceritanya, dan makin banyak ketawanya, dan langgeng🌸</p>
+              </div>
+
+              <div class="l-line l-close">
+                Selalu,
+                <span class="l-sig">#Iyann</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="env-bottom"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="open-ring">
+    <button class="open-btn" id="openBtn" onclick="openEnvelope()">💌</button>
+    <span class="open-label" id="openLabel">ketuk untuk membuka</span>
+  </div>
+
+  <!-- PS card -->
+  <div class="ps-section" id="psSection">
+    <div class="ps-card">
+      <span class="ps-icon">🌷</span>
+      <div class="ps-text">
+        <strong>P.S.</strong> — kalau kamu lagi nggak baik-baik aja, ingat: ada yang selalu ada buat kamu. Nggak perlu kuat sendirian.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════
+   CANVAS PARTICLES
+══════════════════ */
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize(){
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor(){this.reset(true);}
+  reset(init){
+    this.x = Math.random()*W;
+    this.y = init ? Math.random()*H : H + 20;
+    this.size = .6 + Math.random()*2.2;
+    this.speedY = .15 + Math.random()*.5;
+    this.speedX = (Math.random()-.5)*.3;
+    this.life = 0;
+    this.maxLife = 180 + Math.random()*200;
+    this.hue = Math.random() > .5 ? 340 : 30;
+    this.sat = 50 + Math.random()*30;
+    this.lit = 65 + Math.random()*20;
+    this.sway = Math.random()*Math.PI*2;
+    this.swaySpeed = .01 + Math.random()*.02;
+  }
+  update(){
+    this.life++;
+    this.sway += this.swaySpeed;
+    this.x += this.speedX + Math.sin(this.sway)*.4;
+    this.y -= this.speedY;
+    if(this.y < -20 || this.life > this.maxLife) this.reset(false);
+  }
+  draw(){
+    const alpha = Math.min(1, this.life/40) * Math.min(1,(this.maxLife-this.life)/40) * .7;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = `hsl(${this.hue},${this.sat}%,${this.lit}%)`;
+    ctx.shadowColor = `hsl(${this.hue},${this.sat}%,${this.lit}%)`;
+    ctx.shadowBlur = this.size*3;
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+for(let i=0;i<90;i++) particles.push(new Particle());
+
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  particles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ══════════════════
+   INTRO → MAIN
+══════════════════ */
+document.getElementById('introCta').addEventListener('click', function(){
+  document.getElementById('screen-intro').classList.add('out');
+  setTimeout(()=>{
+    document.getElementById('screen-main').classList.add('visible');
+  }, 600);
+  setDate();
+});
+
+function setDate(){
+  const d = new Date();
+  const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  document.getElementById('ldate').textContent = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+/* ══════════════════
+   OPEN ENVELOPE
+══════════════════ */
+let opened = false;
+function openEnvelope(){
+  if(opened) return;
+  opened = true;
+
+  // burst waves
+  burst(); 
+  setTimeout(burst, 350);
+  setTimeout(burst, 700);
+  setTimeout(burst, 1100);
+
+  document.getElementById('envWrap').classList.add('open');
+  document.getElementById('openBtn').classList.add('done');
+  document.getElementById('openLabel').classList.add('gone');
+
+  // show PS after letter reveals
+  setTimeout(()=>{
+    document.getElementById('psSection').classList.add('show');
+  }, 2200);
+}
+
+/* ══════════════════
+   BURST PETALS
+══════════════════ */
+const petalSet = ['🌸','🌷','✦','💕','❤️','🌺','✿','💖','⭐','🌹'];
+function burst(){
+  const layer = document.getElementById('burst-layer');
+  const btn = document.getElementById('openBtn');
+  const r = btn.getBoundingClientRect();
+  const cx = r.left + r.width/2;
+  const cy = r.top + r.height/2;
+
+  for(let i=0;i<22;i++){
+    const p = document.createElement('span');
+    p.className = 'burst-p';
+    p.textContent = petalSet[Math.floor(Math.random()*petalSet.length)];
+    const angle = Math.random()*360;
+    const dist = 60 + Math.random()*200;
+    const rad = angle*Math.PI/180;
+    const dur = (.9 + Math.random()*.6) + 's';
+    const delay = (Math.random()*.18) + 's';
+    p.style.cssText = `
+      left:${cx}px;top:${cy}px;
+      font-size:${.8+Math.random()*1.3}rem;
+      --tx:${Math.cos(rad)*dist}px;
+      --ty:${Math.sin(rad)*dist}px;
+      --r:${Math.random()*540-270}deg;
+      --dur:${dur};--delay:${delay};
+    `;
+    layer.appendChild(p);
+    setTimeout(()=>p.remove(), 1600);
+  }
+}
+</script>
+</body>
+</html>
