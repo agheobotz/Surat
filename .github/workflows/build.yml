@@ -1,0 +1,72 @@
+name: Build APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Website URL'
+        required: false
+        default: ''
+      app_name:
+        description: 'Nama aplikasi'
+        required: true
+      package_name:
+        description: 'Package name'
+        required: true
+      user_id:
+        description: 'Telegram User ID'
+        required: true
+      zip_url:
+        description: 'URL file ZIP Flutter'
+        required: false
+        default: ''
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+          channel: stable
+
+      - name: Build dari ZIP
+        if: ${{ inputs.zip_url != '' }}
+        run: |
+          mkdir -p project
+          curl -L "${{ inputs.zip_url }}" -o project.zip
+          unzip project.zip -d project
+          cd project
+          if [ $(ls -d */ 2>/dev/null | wc -l) -eq 1 ]; then cd $(ls -d */ | head -1); fi
+          flutter pub get
+          flutter build apk --release
+          cp build/app/outputs/flutter-apk/app-release.apk /tmp/${{ inputs.app_name }}.apk
+
+      - name: Build dari URL
+        if: ${{ inputs.url != '' && inputs.zip_url == '' }}
+        run: |
+          git clone https://github.com/agheobotz/Surat.git template || true
+          if [ -d "template" ]; then
+            cd template
+            find . -name "*.dart" -exec sed -i "s|https://example.com|${{ inputs.url }}|g" {} +
+            flutter pub get
+            flutter build apk --release
+            cp build/app/outputs/flutter-apk/app-release.apk /tmp/${{ inputs.app_name }}.apk
+          fi
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.app_name }}-release
+          path: /tmp/${{ inputs.app_name }}.apk
+          retention-days: 1
